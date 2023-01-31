@@ -1,0 +1,46 @@
+#%RAML 1.0
+title: covid-eapi
+version: v1
+baseUri: https://uho-{env}-covid-eapi/covid/{version}
+baseUriParameters:
+  env:
+    description: environment details DEV,Test,UAT,Prod
+    enum:
+      - dev, test, uat, prod
+protocols: [HTTP, HTTPS]
+traits:
+  clientId: !include /reusableComponents/v1/traits/clientIdqueryParam.raml
+  xTransactionId: !include /reusableComponents/v1/traits/xTransactionId.raml
+  stateQueryParams: !include /reusableComponents/v1/traits/stateQueryParams.raml
+/reports:
+  get:
+    is: [clientId,xTransactionId,stateQueryParams]
+    responses:
+      200:
+        body:
+          application/json:
+            example:
+              !include /reusableComponents/v1/exampleFile/200ResponseBody.json
+      503:
+        body:
+          application/json:
+            example:
+              !include /reusableComponents/v1/exampleFile/503Response.json
+      500:
+        body:
+          application/json:
+            example:
+              !include /reusableComponents/v1/exampleFile/500Response.json
+/health-check:
+  get:
+    is: [clientId]
+    responses:
+      200:
+        body:
+          application/json:
+            example:
+              {
+                Message: "API is Working fine"
+              }
+
+

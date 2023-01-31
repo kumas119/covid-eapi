@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<flow name="rest-api-callsFlow-uhub-sapi-get-report" doc:id="87680325-6735-4285-8c96-ece8457013b3" >
+		<ee:transform doc:name="queryparama setup" doc:id="17234c3b-c1f6-45bf-a9c1-f726294eef0e" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+---
+{
+	client_secret : Mule::p('env.client_secret'),
+	client_id : Mule::p('env.client_id'),
+	state: attributes.queryParams.state default ""
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="Logger" doc:id="ec158498-ea66-4d6e-a742-ce5d2e06eab6" message="#[payload]"/>
+		<http:request method="GET" doc:name="Request" doc:id="ced1483a-bdd9-4a69-9ddb-56ce0ac3cec1" config-ref="HTTP_Request_uhub_sapi" path="/v1/reports" >
+			<http:query-params ><![CDATA[#[{
+	client_secret : Mule::p('env.client_id'),
+	client_id : '307017',
+	state: attributes.queryParams.state default ""
+}]]]></http:query-params>
+		</http:request>
+	</flow>
+</mule>

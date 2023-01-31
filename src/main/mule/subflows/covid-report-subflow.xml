@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd">
+	<flow name="covid-report-subflowFlow" doc:id="bd2b80e7-094c-4b22-aabb-b2d4d28040fb" >
+		<logger level="INFO" doc:name="start covid-report-subflow log" doc:id="c8b92f73-c43d-4bb2-a8de-94b23f9a993f" message="covid-report-subflow has been started for transactionId #[vars.transactionId]"/>
+		<flow-ref doc:name="call rest-api-call-uhub-sapi" doc:id="00a95461-4d50-408b-bade-1f10fd089ae0" name="rest-api-callsFlow-uhub-sapi-get-report"/>
+		<ee:transform doc:name="Transform Message" doc:id="cac2e9ce-9ffc-46ab-83bf-311595767f72" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="Logger" doc:id="ccc09dea-5dce-4dca-849b-2ccbc2c3e5cd" message="covid-report-subflow has been completed for transactionId #[vars.transactionId]"/>
+	</flow>
+</mule>
